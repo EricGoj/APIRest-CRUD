@@ -1,25 +1,34 @@
 package com.prueba.a.Modelos;
 
-import java.util.HashSet;
+
+import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 
 
 @Entity
 @Table(name="personajes")
-public class Personaje {
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class,property="personaje_id")
+public class Personaje implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="personaje_id")
@@ -37,9 +46,8 @@ public class Personaje {
 	@Column(name="historia")
 	private String historia;
 	
-	@ManyToMany
-	@JoinTable(name = "peliculas_personajes", joinColumns = @JoinColumn(name = "personaje_id"),
-	inverseJoinColumns = @JoinColumn(name = "pelicula_id"))
+
+	@ManyToMany(mappedBy = "personajes")
     private Set<Pelicula> Peliculas;
 	
 	

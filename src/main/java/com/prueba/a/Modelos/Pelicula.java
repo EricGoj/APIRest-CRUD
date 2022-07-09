@@ -4,9 +4,11 @@ package com.prueba.a.Modelos;
 
 
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
@@ -18,15 +20,23 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+//import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 
 @Entity
 @Table(name="peliculas")
-public class Pelicula {
-
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class,property="pelicula_id")
+public class Pelicula implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="pelicula_id")
@@ -39,12 +49,22 @@ public class Pelicula {
 	private String calificacion;
 	
 	
-	@ManyToMany
 	@JoinTable(name = "peliculas_personajes", joinColumns = @JoinColumn(name = "pelicula_id"),
 	inverseJoinColumns = @JoinColumn(name = "personaje_id"))
+	@ManyToMany(cascade = CascadeType.ALL)
     private Set<Personaje> personajes = new HashSet<>();
+	
+	@JoinTable(name = "peliculas_generos", joinColumns = @JoinColumn(name = "pelicula_id"),
+	inverseJoinColumns = @JoinColumn(name = "genero_id"))
+	@ManyToMany(cascade = CascadeType.ALL)
+    private Set<Personaje> generos = new HashSet<>();
+	
+	
+	
     
-    
+//	@ManyToMany(mappedBy="peliculas",cascade = CascadeType.ALL)
+//     private Set<Genero> Generos = new HashSet<>();
+//    
     /*
 	 @ManyToMany
 	 @JoinTable(name = "peliculas_personajes",
